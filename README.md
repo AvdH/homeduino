@@ -7,10 +7,10 @@ Arduino library for home automation. The Library can be used on a Arduino compat
 Flashing
 --------
 
-You can eithter import all libraries in `libraries` into your Arduino IDE and open the `homeduino.ino` sketch or you can compile and flash using the `Makefile` (recommended).
+You can either import all libraries in `libraries` into your Arduino IDE and open the `homeduino.ino` sketch or you can compile and flash using the `Makefile` (recommended).
 
 The Makefile uses [Arduino.mk](https://github.com/sudar/Arduino-Makefile). Because the arduino-mk version that comes with raspbian on the raspberry pi is to old, 
-arduino-mk comes bundled as git submpodule with this repository.
+arduino-mk comes bundled as git submodule with this repository.
 
 ```bash
 sudo apt-get install arduino-core avr-libc avrdude binutils-avr gcc-avr libconfig-yaml-perl libftdi1 libyaml-perl screen python-serial
@@ -30,6 +30,18 @@ You can now compile it by running `make` or compile and upload it with:
 make upload
 ```
 
+DS18B20 Support
+---------------
+
+If you want to connect a DS18B20 sensor to your arduino you have to checkout the `onewire` branch before `make upload`:
+
+```
+git checkout onewire
+git submodule update --init --recursive
+```
+
+**The onewire library disables global interrupts, this could lead to worse receiving performance!**
+
 Serial communication
 ------------------------
 
@@ -46,7 +58,7 @@ Type in your message and press `Ctrl+Return`. You can exit it with `Ctrl+a` and 
 Commands
 --------
 
-All commands send to homeduino are accepted with `ACK` or rejected with `ERR`. homeduino prints an `ready` message on serial port open if it is ready to receive commands.
+All commands sent to homeduino are accepted with `ACK` or rejected with `ERR`. Homeduino prints an `ready` message on serial port open if it is ready to receive commands.
 
 ### PING
 
@@ -100,16 +112,6 @@ Example: `DHT 22 3`
 
 Responds with: `ACK temperature humidity` or one of `ERR checksum_error`, `ERR timeout_error`, `ERR unknown_error`.
 
-### DST
-
-```
-DST
-```
-Reads a DST temperature sensor. The OneWire sensor needs to be connected to digital pin 2.
-
-Example `DST`
-Responds with: `ACK temperature`.
-
 ### DR, DW, AR, AW, PM
 
 *  digital read: `DR pin`
@@ -120,6 +122,6 @@ Responds with: `ACK temperature`.
 
 Example: `DR 4`
 
-Resonds with `ACK` or `ACK value`. 
+Responds with `ACK` or `ACK value`. 
 
 
